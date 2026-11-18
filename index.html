@@ -1,18 +1,519 @@
 
-<div style="text-align:center; padding:20px;">
-  <h2>🪔 Festival of Lights Vocabulary Challenge</h2>
-  <p>Test your knowledge of India and Hinduism!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Festival of Lights - Hinduism Vocabulary</title>
 
-  <a href="https://jbodine-source.github.io/hinduism_review/"
-     target="_blank"
-     rel="noopener"
-     style="display:inline-block;
-            background:#a64b35;
-            color:white;
-            padding:14px 24px;
-            border-radius:10px;
-            text-decoration:none;
-            font-weight:bold;">
-    Play the Vocabulary Game
-  </a>
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 18px;
+  font-family: Arial, sans-serif;
+  background: #fff8ec;
+  color: #35243a;
+}
+
+.container {
+  max-width: 1050px;
+  margin: auto;
+}
+
+.header {
+  background: linear-gradient(120deg,#71316f,#bd542b,#e29a32);
+  color: white;
+  border-radius: 16px;
+  padding: 18px;
+  text-align: center;
+}
+
+.header h1 { margin: 5px; }
+.lamps { font-size: 27px; }
+
+.instructions {
+  background: #fff0d9;
+  border: 1px solid #e9c58e;
+  border-radius: 10px;
+  padding: 12px;
+  margin: 15px 0;
+}
+
+.progress {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin: 12px 0 7px;
+}
+
+.bar-background {
+  height: 11px;
+  background: #eadac8;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  width: 0%;
+  background: #d68b27;
+  transition: width .3s;
+}
+
+h2 {
+  font-size: 18px;
+  margin: 17px 0 9px;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.terms, .definitions {
+  display: grid;
+  gap: 9px;
+}
+
+.term {
+  background: white;
+  border: 2px solid #e2c9a8;
+  border-radius: 10px;
+  padding: 12px;
+  min-height: 55px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: grab;
+  text-align: left;
+}
+
+.term:hover { border-color: #c27a2e; }
+
+.term.selected {
+  border: 3px solid #bd702a;
+  background: #fff0d9;
+}
+
+.term.used {
+  opacity: .4;
+  cursor: default;
+}
+
+.number {
+  background: #bd702a;
+  color: white;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.drop {
+  background: #fffdf9;
+  border: 2px dashed #d7b995;
+  border-radius: 10px;
+  padding: 12px;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  font-size: 14px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.drop.over {
+  background: #fff0d9;
+  border-color: #bd702a;
+}
+
+.drop.good {
+  border: 2px solid #31966c;
+  background: #effaf3;
+}
+
+.drop.bad {
+  border-color: #c66b50;
+}
+
+.answer {
+  color: #218052;
+  font-weight: bold;
+}
+
+.feedback {
+  margin-top: 15px;
+  padding: 13px;
+  border-radius: 10px;
+  background: #fff0d9;
+  min-height: 48px;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+button.action {
+  background: #a64b35;
+  color: white;
+  border: none;
+  border-radius: 9px;
+  padding: 12px 18px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: white;
+  color: #71316f;
+  border: 2px solid #71316f;
+  border-radius: 9px;
+  padding: 10px 16px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+button:focus-visible, .drop:focus-visible {
+  outline: 3px solid #bd702a;
+  outline-offset: 3px;
+}
+
+.finish {
+  display: none;
+  background: #fff0d9;
+  border: 2px solid #d7a34b;
+  border-radius: 14px;
+  padding: 25px;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.finish h2 { font-size: 25px; }
+
+.footer {
+  text-align: center;
+  margin: 20px;
+  color: #956b46;
+  font-size: 13px;
+}
+
+@media(max-width:650px) {
+  .game-grid { grid-template-columns: 1fr; }
+  body { padding: 10px; }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<div class="header">
+  <div class="lamps">🪔 ✨ 🪔</div>
+  <h1>Festival of Lights</h1>
+  <div>India & Hinduism Vocabulary Challenge</div>
+  <p>Match all ten terms to their correct meanings!</p>
+  <div class="lamps">🌸 🪷 🌸</div>
 </div>
+
+<div class="instructions">
+  <strong>How to play:</strong>
+  Drag a vocabulary term onto its matching definition.
+  You can also click a term and then click its definition.
+  Correct matches stay in place!
+</div>
+
+<div class="progress">
+  <span>Your Progress</span>
+  <span id="score">0 / 10 matched</span>
+</div>
+
+<div class="bar-background">
+  <div class="bar" id="bar"></div>
+</div>
+
+<div class="game-grid">
+
+  <section>
+    <h2>🪷 Vocabulary Terms</h2>
+    <div class="terms" id="terms"></div>
+  </section>
+
+  <section>
+    <h2>✨ Match Each Definition</h2>
+    <div class="definitions" id="definitions"></div>
+  </section>
+
+</div>
+
+<div class="feedback" id="feedback" aria-live="polite">
+  Choose a term to begin!
+</div>
+
+<div class="finish" id="finish">
+  <div style="font-size:45px">🪔 🎉 🪔</div>
+  <h2>Wonderful Work!</h2>
+  <p>You completed the Festival of Lights Vocabulary Challenge!</p>
+  <h2>10 out of 10 correct! 🏆</h2>
+  <p>You have reviewed all ten important Hinduism terms.</p>
+</div>
+
+<div class="buttons">
+  <button class="action" onclick="resetGame(true)">
+    ↻ Play Again
+  </button>
+  <button class="secondary" onclick="resetGame(true)">
+    Shuffle Terms
+  </button>
+</div>
+
+<div class="footer">
+  🪔 LEARN • MATCH • CELEBRATE 🪔
+</div>
+
+</div>
+
+<script>
+const vocabulary = [
+  ["ahimsa",
+   "The belief in nonviolence and avoiding harm to living things."],
+
+  ["dharma",
+   "Living properly and following the right or proper path in life."],
+
+  ["karma",
+   "The belief that a person's good or bad actions will return to them."],
+
+  ["samsara",
+   "The repeating cycle of birth, death, and reincarnation."],
+
+  ["puja",
+   "Daily acts of worship and devotion."],
+
+  ["Vedas",
+   "Some of the sacred texts of Hinduism."],
+
+  ["guru",
+   "A spiritual teacher with deep understanding of Hinduism."],
+
+  ["moksha",
+   "Freedom from samsara and becoming one with Brahman after death."],
+
+  ["reincarnation",
+   "The belief that the soul enters a new physical body after death."],
+
+  ["caste system",
+   "A strict social hierarchy that traditionally divided people into social groups."]
+];
+
+let termOrder = [];
+let definitionOrder = [];
+let matched = new Set();
+let selected = null;
+
+function shuffle(array) {
+  let result = [...array];
+
+  for (let i = result.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+
+  return result;
+}
+
+function render() {
+  const terms = document.getElementById("terms");
+  const definitions = document.getElementById("definitions");
+
+  terms.innerHTML = "";
+  definitions.innerHTML = "";
+
+  termOrder.forEach((idx, n) => {
+    const card = document.createElement("button");
+
+    card.type = "button";
+    card.className = "term";
+
+    if (matched.has(idx)) card.classList.add("used");
+    if (selected === idx) card.classList.add("selected");
+
+    card.draggable = !matched.has(idx);
+    card.disabled = matched.has(idx);
+
+    const number = document.createElement("span");
+    number.className = "number";
+    number.textContent = n + 1;
+
+    const label = document.createElement("span");
+    label.textContent = vocabulary[idx][0];
+
+    card.append(number, label);
+
+    card.addEventListener("click", () => choose(idx));
+
+    card.addEventListener("dragstart", e => {
+      if (matched.has(idx)) {
+        e.preventDefault();
+        return;
+      }
+
+      e.dataTransfer.setData("text/plain", String(idx));
+      e.dataTransfer.effectAllowed = "move";
+      selected = idx;
+    });
+
+    terms.appendChild(card);
+  });
+
+  definitionOrder.forEach(idx => {
+    const zone = document.createElement("div");
+
+    zone.className = "drop";
+    zone.dataset.answer = idx;
+    zone.tabIndex = 0;
+    zone.setAttribute("role", "button");
+
+    const description = document.createElement("div");
+    description.textContent = vocabulary[idx][1];
+
+    zone.appendChild(description);
+
+    if (matched.has(idx)) {
+      zone.classList.add("good");
+
+      const answer = document.createElement("div");
+      answer.className = "answer";
+      answer.textContent = "✓ " + vocabulary[idx][0];
+
+      zone.appendChild(answer);
+    }
+
+    zone.addEventListener("dragover", e => {
+      if (!matched.has(idx)) {
+        e.preventDefault();
+        zone.classList.add("over");
+      }
+    });
+
+    zone.addEventListener("dragleave", () => {
+      zone.classList.remove("over");
+    });
+
+    zone.addEventListener("drop", e => {
+      e.preventDefault();
+      zone.classList.remove("over");
+
+      const value = Number(
+        e.dataTransfer.getData("text/plain")
+      );
+
+      if (Number.isInteger(value)) {
+        attempt(value, idx);
+      }
+    });
+
+    zone.addEventListener("click", () => {
+      if (selected !== null) {
+        attempt(selected, idx);
+      }
+    });
+
+    zone.addEventListener("keydown", e => {
+      if ((e.key === "Enter" || e.key === " ") &&
+          selected !== null) {
+        e.preventDefault();
+        attempt(selected, idx);
+      }
+    });
+
+    definitions.appendChild(zone);
+  });
+
+  document.getElementById("score").textContent =
+    matched.size + " / 10 matched";
+
+  document.getElementById("bar").style.width =
+    (matched.size * 10) + "%";
+
+  document.getElementById("finish").style.display =
+    matched.size === 10 ? "block" : "none";
+}
+
+function choose(idx) {
+  if (matched.has(idx)) return;
+
+  selected = idx;
+
+  document.getElementById("feedback").textContent =
+    "Selected: " + vocabulary[idx][0] +
+    ". Now choose its definition!";
+
+  render();
+}
+
+function attempt(term, answer) {
+  if (matched.has(term) || matched.has(answer)) return;
+
+  if (term === answer) {
+    matched.add(term);
+    selected = null;
+
+    document.getElementById("feedback").textContent =
+      "🎉 Correct! " + vocabulary[term][0] +
+      " — " + vocabulary[term][1];
+
+    render();
+
+  } else {
+    document.getElementById("feedback").textContent =
+      "Not quite! Try another definition for " +
+      vocabulary[term][0] + ".";
+
+    const zone = document.querySelector(
+      '.drop[data-answer="' + answer + '"]'
+    );
+
+    if (zone) {
+      zone.classList.add("bad");
+
+      setTimeout(() => {
+        zone.classList.remove("bad");
+      }, 550);
+    }
+  }
+}
+
+function resetGame(randomize = true) {
+  matched.clear();
+  selected = null;
+
+  const original = vocabulary.map((_, i) => i);
+
+  termOrder = randomize ? shuffle(original) : [...original];
+  definitionOrder = shuffle(original);
+
+  document.getElementById("feedback").textContent =
+    "Choose a term to begin!";
+
+  render();
+}
+
+resetGame(true);
+</script>
+
+</body>
+</html>
